@@ -1,0 +1,27 @@
+/* src/components/general/general.css */
+
+.input-container,
+.select-input-container,
+.search-bar,
+.button {
+	margin: 1em 0;
+}
+
+.input-wrapper {
+	display: flex;
+	align-items: center;
+}
+
+input,
+select,
+button {
+	width: 100%;
+	padding: 0.5em;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	margin-top: 0.5em;
+}
+
+input[type="text"] {
+	width: calc(100% - 1.5em);
+}
