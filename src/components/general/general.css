@@ -1,27 +1,33 @@
 /* src/components/general/general.css */
-
-.input-container,
-.select-input-container,
-.search-bar,
-.button {
-	margin: 1em 0;
+.input-wrapper,
+.select-wrapper,
+.btn,
+.search-bar {
+	margin: 10px 0;
 }
 
-.input-wrapper {
+.input-container {
 	display: flex;
 	align-items: center;
 }
 
-input,
-select,
-button {
-	width: 100%;
-	padding: 0.5em;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-	margin-top: 0.5em;
+.input-icon {
+	margin-right: 5px;
 }
 
-input[type="text"] {
-	width: calc(100% - 1.5em);
+.btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 10px 20px;
+	cursor: pointer;
+}
+
+.btn-icon {
+	margin-right: 5px;
+}
+
+.search-bar input {
+	width: 100%;
+	padding: 10px;
 }
