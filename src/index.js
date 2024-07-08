@@ -11,3 +11,10 @@ root.render(
     <App />
   </React.StrictMode>
 );
+
+// Unregister service worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.ready.then(registration => {
+    registration.unregister();
+  });
+}
