@@ -7,7 +7,7 @@ import Button from './components/general/Button';
 import SearchBar from './components/general/SearchBar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import Authentication from './components/auth/Authentication';
+import Authentication from './routes/auth/Authentication';
 import Dashboard from './components/dashboard/Dashboard';
 import './App.css';
 
@@ -46,7 +46,7 @@ function App() {
       {isLoggedIn ? (
         <Dashboard username={userUsername} />
       ) : (
-        <Authentication />
+        <Authentication setIsLoggedIn={setIsLoggedIn} setUserUsername={setUserUsername} />
       )}
       <h1>General Components Demo</h1>
       <Input
