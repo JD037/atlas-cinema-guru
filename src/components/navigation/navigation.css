@@ -26,3 +26,28 @@
 .header .logout span {
 	margin-left: 5px;
 }
+
+.sidebar {
+	width: 250px;
+	background-color: #333;
+	color: white;
+	padding: 15px;
+}
+
+.sidebar nav ul {
+	list-style-type: none;
+	padding: 0;
+}
+
+.sidebar nav ul li {
+	margin: 10px 0;
+}
+
+.sidebar nav ul li a {
+	color: white;
+	text-decoration: none;
+}
+
+.sidebar nav ul li a:hover {
+	text-decoration: underline;
+}

@@ -1,13 +1,13 @@
-// src/routes/dashboard/Dashboard.js
 import React from 'react';
-import './dashboard.css';
 import Header from '../../components/navigation/Header';
+import Sidebar from '../../components/navigation/Sidebar';
+import './dashboard.css';
 
-const Dashboard = ({ userUsername, setIsLoggedIn }) => {
+const Dashboard = ({ username, setIsLoggedIn }) => {
 	return (
 		<div className="dashboard">
-			<Header userUsername={userUsername} setIsLoggedIn={setIsLoggedIn} />
-			{/* Other dashboard components will go here */}
+			<Header userUsername={username} setIsLoggedIn={setIsLoggedIn} />
+			<Sidebar />
 		</div>
 	);
 };

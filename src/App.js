@@ -1,5 +1,6 @@
 // src/App.js
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import axios from 'axios';
 import Authentication from './routes/auth/Authentication';
 import Dashboard from './routes/dashboard/Dashboard';
@@ -29,11 +30,12 @@ function App() {
 
   return (
     <div className="App">
-      {isLoggedIn ? (
-        <Dashboard username={userUsername} setIsLoggedIn={setIsLoggedIn} />
-      ) : (
-        <Authentication setIsLoggedIn={setIsLoggedIn} setUserUsername={setUserUsername} />
-      )}
+      <Router>
+        <Routes>
+          <Route path="/" element={isLoggedIn ? <Navigate to="/dashboard" /> : <Authentication setIsLoggedIn={setIsLoggedIn} setUserUsername={setUserUsername} />} />
+          <Route path="/dashboard" element={isLoggedIn ? <Dashboard username={userUsername} setIsLoggedIn={setIsLoggedIn} /> : <Navigate to="/" />} />
+        </Routes>
+      </Router>
     </div>
   );
 }
