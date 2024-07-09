@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Authentication from './routes/auth/Authentication';
-import Dashboard from './components/dashboard/Dashboard';
+import Dashboard from './routes/dashboard/Dashboard';
 import './App.css';
 
 function App() {
@@ -27,11 +27,10 @@ function App() {
     }
   }, []);
 
-
   return (
     <div className="App">
       {isLoggedIn ? (
-        <Dashboard username={userUsername} />
+        <Dashboard username={userUsername} setIsLoggedIn={setIsLoggedIn} />
       ) : (
         <Authentication setIsLoggedIn={setIsLoggedIn} setUserUsername={setUserUsername} />
       )}
