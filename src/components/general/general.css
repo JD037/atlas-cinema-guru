@@ -1,4 +1,16 @@
 /* src/components/general/general.css */
+
+body {
+	background-color: #121212;
+	color: #FFFFFF;
+	font-family: 'Roboto', sans-serif;
+}
+
+h1 {
+	font-size: 2em;
+	font-weight: bold;
+}
+
 .input-wrapper,
 .select-wrapper,
 .btn,
@@ -15,19 +27,63 @@
 	margin-right: 5px;
 }
 
+input[type="text"],
+select {
+	width: 100%;
+	padding: 10px;
+	border: none;
+	border-radius: 5px;
+	background-color: #1E1E1E;
+	color: #FFFFFF;
+}
+
+input[type="text"]::placeholder,
+select {
+	color: #757575;
+}
+
 .btn {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	padding: 10px 20px;
 	cursor: pointer;
+	background-color: #E50914;
+	color: #FFFFFF;
+	border: none;
+	border-radius: 5px;
 }
 
 .btn-icon {
 	margin-right: 5px;
 }
 
+.btn:hover {
+	background-color: #B20710;
+}
+
+.search-bar {
+	display: flex;
+}
+
 .search-bar input {
-	width: 100%;
+	width: calc(100% - 50px);
 	padding: 10px;
+	border: none;
+	border-radius: 5px 0 0 5px;
+	background-color: #1E1E1E;
+	color: #FFFFFF;
+}
+
+.search-bar button {
+	width: 50px;
+	background-color: #E50914;
+	color: #FFFFFF;
+	border: none;
+	border-radius: 0 5px 5px 0;
+	cursor: pointer;
+}
+
+.search-bar button:hover {
+	background-color: #B20710;
 }
