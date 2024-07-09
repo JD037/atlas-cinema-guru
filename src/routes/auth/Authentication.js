@@ -13,13 +13,18 @@ const Authentication = ({ setIsLoggedIn, setUserUsername }) => {
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
-		const url = isLogin ? '/api/auth/login' : '/api/auth/register';
+		const url = isLogin ? 'http://localhost:8000/api/auth/login' : 'http://localhost:8000/api/auth/register';
 		axios.post(url, { username, password })
 			.then(response => {
 				const { accessToken } = response.data;
-				localStorage.setItem('accessToken', accessToken);
-				setUserUsername(username);
-				setIsLoggedIn(true);
+				console.log('Token received:', accessToken); // Debugging line
+				if (accessToken) {
+					localStorage.setItem('accessToken', accessToken);
+					setUserUsername(username);
+					setIsLoggedIn(true);
+				} else {
+					console.error('No token received.');
+				}
 			})
 			.catch(error => {
 				console.error('Error during authentication:', error);

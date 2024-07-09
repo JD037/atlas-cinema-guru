@@ -12,7 +12,7 @@ function App() {
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
     if (accessToken) {
-      axios.post('/api/auth/', {}, {
+      axios.post('http://localhost:8000/api/auth/', {}, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -26,6 +26,7 @@ function App() {
         });
     }
   }, []);
+
 
   return (
     <div className="App">
