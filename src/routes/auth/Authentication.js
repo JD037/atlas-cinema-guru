@@ -37,29 +37,23 @@ const Authentication = ({ setIsLoggedIn, setUserUsername }) => {
 				<Button label="Sign In" onClick={() => setIsLogin(true)} className={isLogin ? 'active' : ''} />
 				<Button label="Sign Up" onClick={() => setIsLogin(false)} className={!isLogin ? 'active' : ''} />
 			</div>
-			<form className="auth-form" onSubmit={handleSubmit}>
-				{isLogin ? (
-					<>
-						<Login
-							username={username}
-							setUsername={setUsername}
-							password={password}
-							setPassword={setPassword}
-						/>
-						<Button label="Sign In" type="submit" />
-					</>
-				) : (
-					<>
-						<Register
-							username={username}
-							setUsername={setUsername}
-							password={password}
-							setPassword={setPassword}
-						/>
-						<Button label="Sign Up" type="submit" />
-					</>
-				)}
-			</form>
+			{isLogin ? (
+				<Login
+					username={username}
+					setUsername={setUsername}
+					password={password}
+					setPassword={setPassword}
+					handleSubmit={handleSubmit}
+				/>
+			) : (
+				<Register
+					username={username}
+					setUsername={setUsername}
+					password={password}
+					setPassword={setPassword}
+					handleSubmit={handleSubmit}
+				/>
+			)}
 		</div>
 	);
 };

@@ -29,14 +29,14 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
-      <Router>
+    <Router>
+      <div className="App">
         <Routes>
           <Route path="/" element={isLoggedIn ? <Navigate to="/dashboard" /> : <Authentication setIsLoggedIn={setIsLoggedIn} setUserUsername={setUserUsername} />} />
-          <Route path="/dashboard" element={isLoggedIn ? <Dashboard username={userUsername} setIsLoggedIn={setIsLoggedIn} /> : <Navigate to="/" />} />
+          <Route path="/dashboard/*" element={isLoggedIn ? <Dashboard username={userUsername} setIsLoggedIn={setIsLoggedIn} /> : <Navigate to="/" />} />
         </Routes>
-      </Router>
-    </div>
+      </div>
+    </Router>
   );
 }
 

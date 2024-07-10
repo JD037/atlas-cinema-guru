@@ -1,5 +1,7 @@
 // src/components/navigation/Header.js
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import './navigation.css';
 
 const Header = ({ userUsername, setIsLoggedIn }) => {
@@ -15,6 +17,7 @@ const Header = ({ userUsername, setIsLoggedIn }) => {
 				<p>Welcome, {userUsername}!</p>
 			</div>
 			<div className="logout" onClick={logout}>
+				<FontAwesomeIcon icon={faSignOutAlt} />
 				<span>Logout</span>
 			</div>
 		</nav>

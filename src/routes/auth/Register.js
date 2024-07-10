@@ -1,26 +1,11 @@
+// src/routes/auth/Register.js
 import React from 'react';
 import Input from '../../components/general/Input';
 import Button from '../../components/general/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faKey } from '@fortawesome/free-solid-svg-icons';
-import axios from 'axios';
 
-const Register = ({ username, setUsername, password, setPassword, setIsLoggedIn, setUserUsername }) => {
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-		try {
-			const response = await axios.post('/api/register', {
-				username,
-				password,
-			});
-			localStorage.setItem('accessToken', response.data.accessToken);
-			setIsLoggedIn(true);
-			setUserUsername(response.data.username);
-		} catch (error) {
-			console.error('Registration failed', error);
-		}
-	};
-
+const Register = ({ username, setUsername, password, setPassword, handleSubmit }) => {
 	return (
 		<form className="auth-form" onSubmit={handleSubmit}>
 			<Input
