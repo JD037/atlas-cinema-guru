@@ -17,7 +17,6 @@ const Authentication = ({ setIsLoggedIn, setUserUsername }) => {
 		axios.post(url, { username, password })
 			.then(response => {
 				const { accessToken } = response.data;
-				console.log('Token received:', accessToken); // Debugging line
 				if (accessToken) {
 					localStorage.setItem('accessToken', accessToken);
 					setUserUsername(username);

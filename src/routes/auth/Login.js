@@ -5,9 +5,9 @@ import Button from '../../components/general/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faKey } from '@fortawesome/free-solid-svg-icons';
 
-const Login = ({ username, setUsername, password, setPassword, handleSubmit }) => {
+const Login = ({ username, setUsername, password, setPassword }) => {
 	return (
-		<form className="auth-form" onSubmit={handleSubmit}>
+		<>
 			<Input
 				label="Username"
 				type="text"
@@ -23,7 +23,7 @@ const Login = ({ username, setUsername, password, setPassword, handleSubmit }) =
 				icon={<FontAwesomeIcon icon={faKey} />}
 			/>
 			<Button label="Sign In" type="submit" />
-		</form>
+		</>
 	);
 };
 

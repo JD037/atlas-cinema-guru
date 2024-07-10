@@ -32,7 +32,7 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/" element={isLoggedIn ? <Navigate to="/dashboard" /> : <Authentication setIsLoggedIn={setIsLoggedIn} setUserUsername={setUserUsername} />} />
+          <Route path="/" element={isLoggedIn ? <Navigate to="/dashboard/home" /> : <Authentication setIsLoggedIn={setIsLoggedIn} setUserUsername={setUserUsername} />} />
           <Route path="/dashboard/*" element={isLoggedIn ? <Dashboard username={userUsername} setIsLoggedIn={setIsLoggedIn} /> : <Navigate to="/" />} />
         </Routes>
       </div>
