@@ -1,54 +1,64 @@
 // src/components/navigation/Sidebar.js
-import React, { useState, useEffect } from 'react';
+import './navigation.css';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Activity from '../Activity';
-import './navigation.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFolder, faStar, faClock } from '@fortawesome/free-solid-svg-icons';
+import Activity from '../Activity.js';
 
-const Sidebar = () => {
-	const [selected, setSelected] = useState('home');
-	const [activities, setActivities] = useState([]);
+const SideBar = () => {
 	const navigate = useNavigate();
-
+	const [selected, setSelected] = useState("home");
+	const [small, setSmall] = useState(true);
+	const [activities, setActivities] = useState([]);
+	const [showActivities, setShowActivities] = useState(false);
 	const setPage = (pageName) => {
 		setSelected(pageName);
-		navigate(`/${pageName}`);
+		const route = `/${pageName.replace(/\s+/g, '').toLowerCase()}`;
+		navigate(route);
 	};
-
+	const accessToken = localStorage.getItem('accessToken')
+	const config = {
+		headers: { Authorization: `Bearer ${accessToken}` }
+	};
 	useEffect(() => {
-		const accessToken = localStorage.getItem('accessToken');
-		if (!accessToken) {
-			console.error('No token found in localStorage');
-			return;
-		}
-
-		axios.get('http://localhost:8000/api/activity', {
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-			},
-		})
-			.then(response => {
-				setActivities(response.data);
-			})
-			.catch(error => {
-				console.error('Error fetching activities:', error.response ? error.response.data : error.message);
-			});
+		axios.get('http://localhost:8000/api/activity', config).then(response => {
+			setActivities(response.data.slice(0, 10));
+		}).catch(error => {
+			console.error("This is so embarrassing, I could not find your activities:", error);
+		});
 	}, []);
-
 	return (
-		<nav className="sidebar">
-			<ul className="navigation">
-				<li onClick={() => setPage('home')} className={selected === 'home' ? 'active' : ''}>Home</li>
-				<li onClick={() => setPage('favorites')} className={selected === 'favorites' ? 'active' : ''}>Favorites</li>
-				<li onClick={() => setPage('watchlater')} className={selected === 'watchlater' ? 'active' : ''}>Watch Later</li>
+		<nav
+			className={`sidebar-nav ${small ? '' : 'wide'}`}
+			onMouseEnter={() => setSmall(false)}
+			onMouseLeave={() => setSmall(true)}
+		>
+			<ul className={`sidebar-nav-ul  ${small ? '' : 'wide'}`}>
+				<li onClick={() => setPage("Home")}>
+					<FontAwesomeIcon icon={faFolder} />
+					<span>Home</span>
+				</li>
+				<li onClick={() => setPage("Favorites")}>
+					<FontAwesomeIcon icon={faStar} />
+					<span>Favorites</span>
+				</li>
+				<li onClick={() => setPage("Watch Later")}>
+					<FontAwesomeIcon icon={faClock} />
+					<span>Watch Later</span>
+				</li>
 			</ul>
-			<ul className="activities">
-				{activities.slice(0, 10).map((activity, index) => (
-					<Activity key={index} {...activity} />
-				))}
-			</ul>
+			<div className='latest-activities-div'>
+				<h1 className='sidebar-activity-title'>Latest Activities</h1>
+				<ul className='sidebar-activity-ul'>
+					{activities.map((activity) => (
+						<Activity ley={activity.id} activity={activity} />
+					))}
+				</ul>
+			</div>
 		</nav>
-	);
-};
+	)
+}
 
-export default Sidebar;
+export default SideBar;

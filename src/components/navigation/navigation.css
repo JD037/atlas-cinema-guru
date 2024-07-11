@@ -1,53 +1,90 @@
 /* src/components/navigation/navigation.css */
-.header {
+.navbar {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	width: 100%;
-	padding: 10px 20px;
-	background-color: #1f1f1f;
-	color: #fff;
+	height: 62px;
+	background-color: #000;
+	padding: 0 50px;
 }
 
-.header img {
-	border-radius: 50%;
+.app-name {
+	color: white;
+	font-size: 15px;
 }
 
-.header p {
-	margin: 0;
-}
-
-.header .logout {
-	cursor: pointer;
+.user-links {
 	display: flex;
 	align-items: center;
 }
 
-.header .logout span {
-	margin-left: 5px;
+.user-photo,
+.welcome-text,
+.logout-div {
+	display: flex;
+	align-items: center;
+	margin-right: 20px;
 }
 
-.sidebar {
-	width: 250px;
-	background-color: #333;
+.user-photo img {
+	border: 3px solid red;
+	border-radius: 50%;
+	height: 41px;
+}
+
+.welcome-text {
 	color: white;
-	padding: 15px;
+	font-size: 16px;
 }
 
-.sidebar nav ul {
-	list-style-type: none;
+.logout-div {
+	color: #BB000E;
+	margin-right: 0;
+}
+
+/* SIDEBAR NAV */
+.sidebar-nav {
+	color: white;
+	background-color: #BB000E;
+	width: 50px;
+	height: 100vh;
+	transition: width 1s;
+	display: flex;
+	flex-direction: column;
+	align-items: left;
+}
+
+.sidebar-nav.wide {
+	width: 190px;
+}
+
+.sidebar-nav-ul li {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+}
+
+.sidebar-nav-ul li span {
+	display: none;
+	margin-left: 10px;
+}
+
+.sidebar-nav.wide .sidebar-nav-ul {
+	display: inline;
+}
+
+.latest-activities-div {
+	display: none;
+}
+
+.sidebar-nav.wide lastest-activities-div {
+	display: block;
+	width: 100%
+}
+
+.sidebar-activity-ul,
+.sidebar-nav-ul {
 	padding: 0;
-}
-
-.sidebar nav ul li {
-	margin: 10px 0;
-}
-
-.sidebar nav ul li a {
-	color: white;
-	text-decoration: none;
-}
-
-.sidebar nav ul li a:hover {
-	text-decoration: underline;
+	list-style-type: none;
 }

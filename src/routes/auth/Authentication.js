@@ -1,73 +1,71 @@
 // src/routes/auth/Authentication.js
-import React, { useState } from 'react';
-import axios from 'axios';
 import './auth.css';
-import Login from './Login';
-import Register from './Register';
-import Button from '../../components/general/Button';
+import { useState } from 'react';
+import Button from '../../components/general/Button.js';
+import Login from './Login.js';
+import Register from './Register.js';
+import axios from 'axios';
+import PropTypes from 'prop-types';
 
-const Authentication = ({ setIsLoggedIn, setUserUsername }) => {
-	const [isLogin, setIsLogin] = useState(true);
-	const [username, setUsername] = useState('');
-	const [password, setPassword] = useState('');
+const Authentication = ({ setUserUsername, setIsLoggedIn }) => {
+	const [_switch, set_Switch] = useState(true);
+	const [username, setUsername] = useState("");
+	const [password, setPassword] = useState("");
 
-	const handleSubmit = async (event) => {
-		event.preventDefault();
-		console.log('Form submitted');
-
-		const url = isLogin ? '/api/auth/login' : '/api/auth/register';
-		const data = { username, password };
-
-		try {
-			const response = await axios.post(url, data, {
-				headers: {
-					'Content-Type': 'application/json',
-				}
-			});
-			console.log('Response:', response);
-			const { accessToken } = response.data;
-			if (accessToken) {
-				localStorage.setItem('accessToken', accessToken);
+	const handleSubmit = async (onSubmit) => {
+		onSubmit.preventDefault();
+		if (_switch) {
+			axios.post('http://localhost:8000/api/auth/login', { username, password }).then((response) => {
+				localStorage.setItem('accessToken', response.data.accessToken);
 				setUserUsername(username);
 				setIsLoggedIn(true);
-			} else {
-				console.error('No token received.');
-			}
-		} catch (error) {
-			if (error.response) {
-				console.error('Error during authentication:', error.response.data);
-			} else {
-				console.error('Error during authentication:', error.message);
-			}
+				console.log(response);
+				console.log(response.data.message);
+				console.log(response.data.accessToken);
+			}).catch((err) => {
+				console.log(err.message);
+				console.log(err);
+				console.log(err.response.data.message);
+			});
+		} else {
+			axios.post('http://localhost:8000/api/auth/register', { username, password }).then((response) => {
+				localStorage.setItem('accessToken', response.data.accessToken);
+				setUserUsername(username);
+				setIsLoggedIn(true);
+				console.log(response);
+				console.log(response.data.message);
+				console.log(response.data.accessToken);
+			}).catch((err) => {
+				console.log(err.message);
+				console.log(err);
+				console.log(err.response.data.message);
+			});
 		}
-	};
+	}
 
 	return (
-		<div className="auth-container">
-			<div className="auth-header">
-				<Button label="Sign In" onClick={() => setIsLogin(true)} className={isLogin ? 'active' : ''} />
-				<Button label="Sign Up" onClick={() => setIsLogin(false)} className={!isLogin ? 'active' : ''} />
+		<div className="auth-background">
+			<div className="auth-box">
+				<form onSubmit={handleSubmit}>
+					<div className='auth-header' >
+						<Button label="Sign In" className={_switch ? "button auth-button light-red" : "button auth-button dark-red"} onClick={() => set_Switch(true)} type="button" />
+						<Button label="Sign Up" className={_switch ? "button auth-button dark-red" : "button auth-button light-red"} onClick={() => set_Switch(false)} type="button" />
+					</div>
+					<div className='auth-form'>
+						{_switch ?
+							<Login username={username} password={password} setUsername={setUsername} setPassword={setPassword} />
+							:
+							<Register username={username} password={password} setUsername={setUsername} setPassword={setPassword} />}
+					</div>
+				</form>
 			</div>
-			<form onSubmit={handleSubmit}>
-				{isLogin ? (
-					<Login
-						username={username}
-						setUsername={setUsername}
-						password={password}
-						setPassword={setPassword}
-					/>
-				) : (
-					<Register
-						username={username}
-						setUsername={setUsername}
-						password={password}
-						setPassword={setPassword}
-					/>
-				)}
-				<button type="submit">{isLogin ? 'Sign In' : 'Sign Up'}</button>
-			</form>
 		</div>
 	);
-};
+}
+
+Authentication.propTypes = {
+	setIsLoggedIn: PropTypes.func.isRequired,
+	setUserUsername: PropTypes.func.isRequired
+}
 
 export default Authentication;

@@ -1,6 +1,8 @@
-/* Add the necessary CSS styles here for miscellaneous components */
-.activity-item {
-	margin: 10px 0;
-	padding: 10px;
-	border-bottom: 1px solid #ccc;
+.activity-list-item {
+	color: white;
+	font-size: 12;
+}
+
+.red-text {
+	color: #F31D27;
 }

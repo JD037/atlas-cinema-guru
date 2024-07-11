@@ -1,58 +1,91 @@
 // src/components/movies/MovieCard.js
-
-import React, { useState, useEffect } from 'react';
 import './movies.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart, faClock } from '@fortawesome/free-solid-svg-icons';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar, faClock } from '@fortawesome/free-solid-svg-icons';
+import backupImg from '../../assets/backup.png';
+import PropTypes from 'prop-types';
+
 
 const MovieCard = ({ movie }) => {
 	const [isFavorite, setIsFavorite] = useState(false);
 	const [isWatchLater, setIsWatchLater] = useState(false);
-
+	const accessToken = localStorage.getItem('accessToken');
 	useEffect(() => {
-		// Fetch the user's list of favorites and watch later titles
-		axios.get('/api/titles/favorite/').then(response => {
-			if (response.data.some(fav => fav.imdbId === movie.imdbId)) {
-				setIsFavorite(true);
+		const fetchUserLists = async () => {
+			const config = {
+				headers: { Authorization: `Bearer ${accessToken}` }
+			};
+			try {
+				// get faves
+				const favoritesResponse = await axios.get('http://localhost:8000/api/titles/favorite/', config);
+				setIsFavorite(favoritesResponse.data.some(fav => fav.imdbId === movie.imdbId));
+				// get watch later
+				const watchLaterResponse = await axios.get('http://localhost:8000/api/titles/watchlater/', config);
+				setIsWatchLater(watchLaterResponse.data.some(wl => wl.imdbId === movie.imdbId));
+			} catch (error) {
+				console.error("couldn't get the lists:", error);
 			}
-		});
-
-		axios.get('/api/titles/watchlater/').then(response => {
-			if (response.data.some(watch => watch.imdbId === movie.imdbId)) {
-				setIsWatchLater(true);
+		};
+		if (movie.imdbId && accessToken) {
+			fetchUserLists();
+		}
+	}, [movie.imdbId, accessToken]
+	);
+	const handleClick = async (type) => {
+		const config = {
+			headers: { Authorization: `Bearer ${accessToken}` }
+		};
+		const url = `http://localhost:8000/api/titles/${type}/${movie.imdbId}`;
+		try {
+			// discern the toggle -- post (add) if not already, delete otherwise
+			if ((type === 'favorite' && !isFavorite) || (type === 'watchlater' && !isWatchLater)) {
+				await axios.post(url, {}, config);
+			} else {
+				await axios.delete(url, config);
 			}
-		});
-	}, [movie.imdbId]);
-
-	const handleClick = (type) => {
-		const url = `/api/titles/${type}/${movie.imdbId}`;
-		const method = (type === 'favorite' && isFavorite) || (type === 'watchlater' && isWatchLater) ? 'delete' : 'post';
-
-		axios({ method, url }).then(() => {
+			// and update state
 			if (type === 'favorite') {
 				setIsFavorite(!isFavorite);
 			} else if (type === 'watchlater') {
 				setIsWatchLater(!isWatchLater);
 			}
-		});
+		} catch (err) {
+			console.error(`sadly, the ${type} list did not update`, err);
+		}
 	};
 
 	return (
-		<li className="movie-card">
-			<h3>{movie.title}</h3>
-			<p>{movie.synopsis}</p>
-			<div className="genres">
-				{movie.genres.map((genre, index) => (
-					<span key={index} className="genre-tag">{genre}</span>
-				))}
+		<li className='card'>
+			<div className='card-image-container'>
+				<img
+					src={movie.imageurls[0] || backupImg}
+					alt={movie.title} />
+				<div className='card-icons'>
+					<FontAwesomeIcon icon={faClock} onClick={() => handleClick('watchlater')} className={isWatchLater ? 'card-fa-icon filled' : 'card-fa-icon'} />
+					<FontAwesomeIcon icon={faStar} onClick={() => handleClick('favorite')} className={isFavorite ? 'card-fa-icon filled' : 'card-fa-icon'} />
+				</div>
+				<div className='title-overlay'>
+					{movie.title}
+				</div>
 			</div>
-			<div className="actions">
-				<FontAwesomeIcon icon={faHeart} onClick={() => handleClick('favorite')} className={isFavorite ? 'active' : ''} />
-				<FontAwesomeIcon icon={faClock} onClick={() => handleClick('watchlater')} className={isWatchLater ? 'active' : ''} />
+			<div className='summary-box'>
+				<p>
+					{movie.synopsis || "Just guess what it's about"}
+				</p>
+				<div className='genre-bubbles'>
+					{movie.genres.map((genre, index) => (
+						<span key={index} className='genre-bubble'>{genre}</span>
+					))}
+				</div>
 			</div>
 		</li>
-	);
-};
+	)
+}
+
+MovieCard.propTypes = {
+	movie: PropTypes.object.isRequired
+}
 
 export default MovieCard;

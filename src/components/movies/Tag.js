@@ -1,25 +1,31 @@
 // src/components/movies/Tag.js
-
-import React, { useState } from 'react';
 import './movies.css';
+import { useState } from 'react';
+import PropTypes from 'prop-types';
 
 const Tag = ({ genre, filter, genres, setGenres }) => {
-	const [selected, setSelected] = useState(false);
-
+	const [selected, setSelected] = useState("false");
 	const handleTag = () => {
 		if (selected) {
-			setGenres(genres.filter(g => g !== genre));
+			const revisedGenres = genres.filter((gen) => gen !== genre);
+			setGenres(revisedGenres);
+			setSelected(false);
 		} else {
-			setGenres([...genres, genre]);
+			const revisedGenres = [...genres, genre];
+			setGenres(revisedGenres);
+			setSelected(true);
 		}
-		setSelected(!selected);
 	};
-
 	return (
-		<li onClick={handleTag} className={selected ? 'selected' : ''}>
-			{genre}
-		</li>
-	);
-};
+		<li className={filter ? 'tag selected' : 'tag'} onClick={handleTag}>{genre}</li>
+	)
+}
+
+Tag.propTypes = {
+	genre: PropTypes.string.isRequired,
+	filter: PropTypes.bool.isRequired,
+	genres: PropTypes.array.isRequired,
+	setGenres: PropTypes.func.isRequired
+}
 
 export default Tag;

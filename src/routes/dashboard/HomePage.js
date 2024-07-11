@@ -1,10 +1,10 @@
 // src/routes/dashboard/HomePage.js
-import React, { useState, useEffect, useCallback } from 'react';
-import api from '../../api'; // Import the configured Axios instance
-import Filter from '../../components/movies/Filter';
-import MovieCard from '../../components/movies/MovieCard';
-import Button from '../../components/general/Button';
 import './dashboard.css';
+import MovieCard from '../../components/movies/MovieCard.js';
+import Filter from '../../components/movies/Filter.js';
+import Button from '../../components/general/Button.js';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const HomePage = () => {
 	const [movies, setMovies] = useState([]);
@@ -14,56 +14,39 @@ const HomePage = () => {
 	const [sort, setSort] = useState("");
 	const [title, setTitle] = useState("");
 	const [page, setPage] = useState(1);
+	const accessToken = localStorage.getItem('accessToken');
 
-	const loadMovies = useCallback((page) => {
-		api.get('/api/titles/advancedsearch', {
-			params: { minYear, maxYear, genres, title, sort, page }
-		})
-			.then(response => {
-				console.log('Response:', response); // Added for debugging
-				if (response.data.titles && Array.isArray(response.data.titles)) {
-					setMovies(prevMovies => [...prevMovies, ...response.data.titles]);
-				} else {
-					console.error('Data is not an array:', response.data);
-				}
-			})
-			.catch(error => {
-				console.error('Error loading movies:', error.response ? error.response.data : error.message);
+	const loadMovies = async (minYear, maxYear, genres, title, sort, page, accessToken, setMovies) => {
+		const params = {
+			minYear,
+			maxYear,
+			genre: genres.join(','),
+			title,
+			sort,
+			page,
+		};
+		try {
+			const response = await axios.get('http://localhost:8000/api/titles/advancedsearch', {
+				headers: { Authorization: `Bearer ${accessToken}` },
+				params,
 			});
-	}, [minYear, maxYear, genres, title, sort]);
-
-	useEffect(() => {
-		setMovies([]); // Clear movies when filters change
-		setPage(1); // Reset page number when filters change
-		loadMovies(1);
-	}, [minYear, maxYear, genres, title, sort, loadMovies]);
-
-	const handleLoadMore = () => {
-		const nextPage = page + 1;
-		setPage(nextPage);
-		loadMovies(nextPage);
+			setMovies(prevMovies => [...prevMovies, ...response.data.titles]);
+		} catch (error) {
+			console.error("Couldn't get movies whoops:", error);
+		}
 	};
 
+	useEffect(() => {
+		loadMovies(minYear, maxYear, genres, title, sort, page, accessToken, setMovies);
+	}, [minYear, maxYear, genres, title, sort, page, accessToken]);
+
 	return (
-		<div className="home-page">
-			<Filter
-				minYear={minYear}
-				setMinYear={setMinYear}
-				maxYear={maxYear}
-				setMaxYear={setMaxYear}
-				sort={sort}
-				setSort={setSort}
-				genres={genres}
-				setGenres={setGenres}
-				title={title}
-				setTitle={setTitle}
-			/>
-			<ul className="movie-list">
-				{movies.map(movie => (
-					<MovieCard key={movie.imdbId} movie={movie} />
-				))}
+		<div>
+			<Filter minYear={minYear} setMinYear={setMinYear} maxYear={maxYear} setMaxYear={setMaxYear} sort={sort} setSort={setSort} genres={genres} setGenres={setGenres} title={title} setTitle={setTitle} />
+			<ul className="movies-list">
+				{movies.map(movie => (<MovieCard key={movie.id} movie={movie} />))}
 			</ul>
-			<Button label="Load More.." onClick={handleLoadMore} />
+			<Button label="Load More.." className="button" onClick={() => setPage(prevPage => prevPage + 1)} />
 		</div>
 	);
 };
