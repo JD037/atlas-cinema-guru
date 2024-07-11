@@ -1,6 +1,6 @@
 // src/routes/dashboard/Favorites.js
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../../api'; // Import the configured Axios instance
 import MovieCard from '../../components/movies/MovieCard';
 import './dashboard.css';
 
@@ -8,7 +8,7 @@ const Favorites = () => {
 	const [movies, setMovies] = useState([]);
 
 	useEffect(() => {
-		axios.get('http://localhost:8000/api/titles/favorite/')
+		api.get('/api/titles/favorite/')
 			.then(response => {
 				setMovies(response.data);
 			})

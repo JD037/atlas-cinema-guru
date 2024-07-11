@@ -1,6 +1,6 @@
 // src/routes/dashboard/WatchLater.js
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../../api'; // Import the configured Axios instance
 import MovieCard from '../../components/movies/MovieCard';
 import './dashboard.css';
 
@@ -8,7 +8,7 @@ const WatchLater = () => {
 	const [movies, setMovies] = useState([]);
 
 	useEffect(() => {
-		axios.get('http://localhost:8000/api/titles/watchlater/')
+		api.get('/api/titles/watchlater/')
 			.then(response => {
 				setMovies(response.data);
 			})

@@ -5,15 +5,16 @@ import Button from '../../components/general/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faKey } from '@fortawesome/free-solid-svg-icons';
 
-const Register = ({ username, setUsername, password, setPassword, handleSubmit }) => {
+const Register = ({ username, setUsername, password, setPassword }) => {
 	return (
-		<form onSubmit={handleSubmit}>
+		<div>
 			<Input
 				label="Username"
 				type="text"
 				value={username}
 				setValue={setUsername}
 				icon={<FontAwesomeIcon icon={faUser} />}
+				inputAttributes={{ autoComplete: "username" }}
 			/>
 			<Input
 				label="Password"
@@ -21,9 +22,10 @@ const Register = ({ username, setUsername, password, setPassword, handleSubmit }
 				value={password}
 				setValue={setPassword}
 				icon={<FontAwesomeIcon icon={faKey} />}
+				inputAttributes={{ autoComplete: "new-password" }}
 			/>
 			<Button label="Sign Up" type="submit" />
-		</form>
+		</div>
 	);
 };
 

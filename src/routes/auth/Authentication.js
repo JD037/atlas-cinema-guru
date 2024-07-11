@@ -1,3 +1,4 @@
+// src/routes/auth/Authentication.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import './auth.css';
@@ -10,30 +11,36 @@ const Authentication = ({ setIsLoggedIn, setUserUsername }) => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 
-	const handleSubmit = (event) => {
+	const handleSubmit = async (event) => {
 		event.preventDefault();
 		console.log('Form submitted');
 
-		const url = isLogin ? 'http://localhost:8000/api/auth/login' : 'http://localhost:8000/api/auth/register';
+		const url = isLogin ? '/api/auth/login' : '/api/auth/register';
+		const data = { username, password };
 
-		axios.post(url, { username, password })
-			.then(response => {
-				console.log('Response:', response);
-				const { accessToken } = response.data;
-				if (accessToken) {
-					localStorage.setItem('accessToken', accessToken);
-					setUserUsername(username);
-					setIsLoggedIn(true);
-					console.log('Token stored:', localStorage.getItem('accessToken'));
-				} else {
-					console.error('No token received.');
+		try {
+			const response = await axios.post(url, data, {
+				headers: {
+					'Content-Type': 'application/json',
 				}
-			})
-			.catch(error => {
-				console.error('Error during authentication:', error.response ? error.response.data : error.message);
 			});
+			console.log('Response:', response);
+			const { accessToken } = response.data;
+			if (accessToken) {
+				localStorage.setItem('accessToken', accessToken);
+				setUserUsername(username);
+				setIsLoggedIn(true);
+			} else {
+				console.error('No token received.');
+			}
+		} catch (error) {
+			if (error.response) {
+				console.error('Error during authentication:', error.response.data);
+			} else {
+				console.error('Error during authentication:', error.message);
+			}
+		}
 	};
-
 
 	return (
 		<div className="auth-container">
@@ -41,23 +48,24 @@ const Authentication = ({ setIsLoggedIn, setUserUsername }) => {
 				<Button label="Sign In" onClick={() => setIsLogin(true)} className={isLogin ? 'active' : ''} />
 				<Button label="Sign Up" onClick={() => setIsLogin(false)} className={!isLogin ? 'active' : ''} />
 			</div>
-			{isLogin ? (
-				<Login
-					username={username}
-					setUsername={setUsername}
-					password={password}
-					setPassword={setPassword}
-					handleSubmit={handleSubmit}
-				/>
-			) : (
-				<Register
-					username={username}
-					setUsername={setUsername}
-					password={password}
-					setPassword={setPassword}
-					handleSubmit={handleSubmit}
-				/>
-			)}
+			<form onSubmit={handleSubmit}>
+				{isLogin ? (
+					<Login
+						username={username}
+						setUsername={setUsername}
+						password={password}
+						setPassword={setPassword}
+					/>
+				) : (
+					<Register
+						username={username}
+						setUsername={setUsername}
+						password={password}
+						setPassword={setPassword}
+					/>
+				)}
+				<button type="submit">{isLogin ? 'Sign In' : 'Sign Up'}</button>
+			</form>
 		</div>
 	);
 };

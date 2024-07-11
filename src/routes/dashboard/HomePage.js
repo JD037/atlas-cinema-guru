@@ -1,6 +1,6 @@
 // src/routes/dashboard/HomePage.js
 import React, { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
+import api from '../../api'; // Import the configured Axios instance
 import Filter from '../../components/movies/Filter';
 import MovieCard from '../../components/movies/MovieCard';
 import Button from '../../components/general/Button';
@@ -16,16 +16,7 @@ const HomePage = () => {
 	const [page, setPage] = useState(1);
 
 	const loadMovies = useCallback((page) => {
-		const accessToken = localStorage.getItem('accessToken');
-		if (!accessToken) {
-			console.error('No token found in localStorage');
-			return;
-		}
-
-		axios.get('http://localhost:8000/api/titles/advancedsearch', {
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-			},
+		api.get('/api/titles/advancedsearch', {
 			params: { minYear, maxYear, genres, title, sort, page }
 		})
 			.then(response => {
@@ -42,8 +33,16 @@ const HomePage = () => {
 	}, [minYear, maxYear, genres, title, sort]);
 
 	useEffect(() => {
+		setMovies([]); // Clear movies when filters change
+		setPage(1); // Reset page number when filters change
 		loadMovies(1);
 	}, [minYear, maxYear, genres, title, sort, loadMovies]);
+
+	const handleLoadMore = () => {
+		const nextPage = page + 1;
+		setPage(nextPage);
+		loadMovies(nextPage);
+	};
 
 	return (
 		<div className="home-page">
@@ -64,7 +63,7 @@ const HomePage = () => {
 					<MovieCard key={movie.imdbId} movie={movie} />
 				))}
 			</ul>
-			<Button label="Load More.." onClick={() => setPage(prevPage => prevPage + 1)} />
+			<Button label="Load More.." onClick={handleLoadMore} />
 		</div>
 	);
 };
