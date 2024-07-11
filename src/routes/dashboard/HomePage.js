@@ -13,16 +13,31 @@ const HomePage = () => {
 	const [genres, setGenres] = useState([]);
 	const [sort, setSort] = useState("");
 	const [title, setTitle] = useState("");
+	const [page, setPage] = useState(1);
 
 	const loadMovies = useCallback((page) => {
+		const accessToken = localStorage.getItem('accessToken');
+		if (!accessToken) {
+			console.error('No token found in localStorage');
+			return;
+		}
+
 		axios.get('http://localhost:8000/api/titles/advancedsearch', {
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+			},
 			params: { minYear, maxYear, genres, title, sort, page }
 		})
 			.then(response => {
-				setMovies(prevMovies => [...prevMovies, ...response.data]);
+				console.log('Response:', response); // Added for debugging
+				if (response.data.titles && Array.isArray(response.data.titles)) {
+					setMovies(prevMovies => [...prevMovies, ...response.data.titles]);
+				} else {
+					console.error('Data is not an array:', response.data);
+				}
 			})
 			.catch(error => {
-				console.error('Error loading movies:', error);
+				console.error('Error loading movies:', error.response ? error.response.data : error.message);
 			});
 	}, [minYear, maxYear, genres, title, sort]);
 
@@ -49,7 +64,7 @@ const HomePage = () => {
 					<MovieCard key={movie.imdbId} movie={movie} />
 				))}
 			</ul>
-			<Button label="Load More.." onClick={() => loadMovies(2)} />
+			<Button label="Load More.." onClick={() => setPage(prevPage => prevPage + 1)} />
 		</div>
 	);
 };

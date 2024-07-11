@@ -16,16 +16,22 @@ const Sidebar = () => {
 	};
 
 	useEffect(() => {
+		const accessToken = localStorage.getItem('accessToken');
+		if (!accessToken) {
+			console.error('No token found in localStorage');
+			return;
+		}
+
 		axios.get('http://localhost:8000/api/activity', {
 			headers: {
-				Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+				Authorization: `Bearer ${accessToken}`,
 			},
 		})
 			.then(response => {
 				setActivities(response.data);
 			})
 			.catch(error => {
-				console.error('Error fetching activities:', error);
+				console.error('Error fetching activities:', error.response ? error.response.data : error.message);
 			});
 	}, []);
 

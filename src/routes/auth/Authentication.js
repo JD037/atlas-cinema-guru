@@ -10,27 +10,30 @@ const Authentication = ({ setIsLoggedIn, setUserUsername }) => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 
-	const handleSubmit = async (event) => {
+	const handleSubmit = (event) => {
 		event.preventDefault();
 		console.log('Form submitted');
 
 		const url = isLogin ? 'http://localhost:8000/api/auth/login' : 'http://localhost:8000/api/auth/register';
 
-		try {
-			const response = await axios.post(url, { username, password });
-			console.log('Response:', response);
-			const { accessToken } = response.data;
-			if (accessToken) {
-				localStorage.setItem('accessToken', accessToken);
-				setUserUsername(username);
-				setIsLoggedIn(true);
-			} else {
-				console.error('No token received.');
-			}
-		} catch (error) {
-			console.error('Error during authentication:', error.response ? error.response.data : error.message);
-		}
+		axios.post(url, { username, password })
+			.then(response => {
+				console.log('Response:', response);
+				const { accessToken } = response.data;
+				if (accessToken) {
+					localStorage.setItem('accessToken', accessToken);
+					setUserUsername(username);
+					setIsLoggedIn(true);
+					console.log('Token stored:', localStorage.getItem('accessToken'));
+				} else {
+					console.error('No token received.');
+				}
+			})
+			.catch(error => {
+				console.error('Error during authentication:', error.response ? error.response.data : error.message);
+			});
 	};
+
 
 	return (
 		<div className="auth-container">
